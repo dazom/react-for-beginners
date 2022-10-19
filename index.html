@@ -15,37 +15,118 @@
   <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
   <script type="text/babel">
-    function App() {
-      const [minutes, setMinutes] = React.useState(0);
+    function MinutesToHours() {
+      const [amount, setAmount] = React.useState(0);
+      const [inverted, setInverted] = React.useState(false);
+
       const onChange = (event) => {
-        setMinutes(event.target.value);
+        setAmount(event.target.value);
       };
-      const reset = () => setMinutes(0);
+      const reset = () => {
+        setAmount(0);
+      };
+      const onInvert = () => {
+        reset();
+        setInverted((current) => !current);
+      };
       return (
         <div>
-          <h1>Super Converter</h1>
+          <h3>Minutes & Hours</h3>
           <div>
             <label htmlFor="minutes">Minutes</label>
             <input
               id="minutes"
-              value={minutes}
+              value={inverted ? amount * 60 : amount}
               placeholder="Minutes"
               type="number"
               onChange={onChange}
+              disabled={inverted}
             />
           </div>
           <div>
             <label htmlFor="hours">Hours</label>
             <input
               id="hours"
-              value={Math.round(minutes / 60)}
+              value={inverted ? amount : Math.round(amount / 60)}
               placeholder="Hours"
               type="number"
-              disabled
+              onChange={onChange}
+              disabled={!inverted}
             />
           </div>
 
           <button onClick={reset}>Reset</button>
+          <button onClick={onInvert}>{inverted ? "Turn Back" : "Flip"}</button>
+        </div>
+      );
+    }
+
+    function LitersToCC() {
+      const [amount, setAmount] = React.useState(0);
+      const [inverted, setInverted] = React.useState(false);
+
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      };
+      const reset = () => {
+        setAmount(0);
+      };
+      const onInvert = () => {
+        reset();
+        setInverted((current) => !current);
+      };
+
+      return (
+        <div>
+          <h3>Liters & CC</h3>
+          <div>
+            <label htmlFor="liters">Liter</label>
+            <input
+              id="liters"
+              value={inverted ? amount / 1000 : amount}
+              placeholder="Liters"
+              type="number"
+              onChange={onChange}
+              disabled={inverted}
+            />
+          </div>
+          <div>
+            <label htmlFor="cc">CC</label>
+            <input
+              id="cc"
+              value={inverted ? amount : amount * 1000}
+              placeholder="cc"
+              type="number"
+              onChange={onChange}
+              disabled={!inverted}
+            />
+          </div>
+
+          <button onClick={reset}>Reset</button>
+          <button onClick={onInvert}>{inverted ? "Turn Back" : "Flip"}</button>
+        </div>
+      );
+    }
+
+    function App() {
+      const [index, setIndex] = React.useState("x");
+      const ChangeInSelect = (event) => {
+        setIndex(event.target.value);
+      };
+      return (
+        <div>
+          <h1>Super Converter</h1>
+          <select value={index} onChange={ChangeInSelect}>
+            <option value="x">Choice your units</option>
+            <option value="0">Minutes & Hours</option>
+            <option value="1">Liters & CC</option>
+          </select>
+
+          <hr />
+
+          {index === "x" ? "Please choice units for using." : null}
+          {index === "0" ? <MinutesToHours /> : null}
+          {index === "1" ? <LitersToCC /> : null}
         </div>
       );
     }
